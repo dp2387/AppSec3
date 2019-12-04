@@ -1,0 +1,16 @@
+<html>
+    <head>
+        <title>Spellcheck</title>
+    </head>
+
+    <body>
+        <form action="spell_check" method="post">
+            <textarea id="inputtext" name="unchecked" rows="5" cols="50" maxlength="1000" required></textarea>
+            <input type="submit" value="Submit">
+        </form>
+        {% if message %}
+            {{ message }}
+        {% endif %}
+        <a href="/logout">Logout</a>
+    </body>
+</html>
