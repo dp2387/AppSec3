@@ -6,6 +6,7 @@
         {% if user == "admin" %}
             <h1>Login History</h1>
             <form action="login_history" method="post">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <input type="text" id="userid" name="uname">
                 <input type="submit" value="Search">
             </form>

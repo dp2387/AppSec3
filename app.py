@@ -7,6 +7,7 @@ import subprocess
 import re
 from flask import Flask, render_template, request, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import exc
 from functools import wraps
 from create_db import User, Spellcheck, Loginlog
@@ -17,6 +18,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spell_check.db'
 app.secret_key = "SPELL_CHECK_SECRET"
 SALT = "cs9163"
 db = SQLAlchemy(app)
+
+csrf = CSRFProtect(app)
 
 def login_required(f):
     @wraps(f)

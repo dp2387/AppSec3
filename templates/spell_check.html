@@ -5,6 +5,7 @@
 
     <body>
         <form action="spell_check" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <textarea id="inputtext" name="unchecked" rows="5" cols="50" maxlength="1000" required></textarea>
             <input type="submit" value="Submit">
         </form>
