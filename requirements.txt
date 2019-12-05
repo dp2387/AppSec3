@@ -3,3 +3,4 @@ flask-sqlalchemy
 sqlalchemy
 tox
 tox-travis
+pytest

@@ -11,7 +11,7 @@
             </form>
             {% if log %}
                 {% for event in log %}
-                    {{ event.query_id }} | {{ event.username }} | {{ event.time }} | {{ event.query_type }}<br>
+                    <p id="login{{ event.query_id }}">{{ event.query_id }} | {{ event.username }} | {{ event.time }} | {{ event.query_type }}</p><br>
                 {% endfor %}
             {% endif %}
         {% else %}

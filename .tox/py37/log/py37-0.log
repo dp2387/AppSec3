@@ -1,0 +1,9 @@
+action: py37, msg: getenv
+cwd: /root/Documents/AppSec3/.tox
+cmd: /usr/bin/python3 -m virtualenv --no-download --python /usr/bin/python3 py37
+Already using interpreter /usr/bin/python3
+Using base prefix '/usr'
+New python executable in /root/Documents/AppSec3/.tox/py37/bin/python3
+Also creating executable in /root/Documents/AppSec3/.tox/py37/bin/python
+Installing setuptools, pip, wheel...
+done.
