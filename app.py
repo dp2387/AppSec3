@@ -4,7 +4,8 @@
 import hashlib
 import os
 import subprocess
-from flask import Flask, render_template, request, session, redirect, url_for, escape
+import re
+from flask import Flask, render_template, request, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 from functools import wraps
@@ -40,10 +41,10 @@ def home():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     if request.form:
-        username = escape(request.form["username"])
-        plainpwd = escape(request.form["password"]) + SALT	#Salted password
+        username = request.form["username"]
+        plainpwd = request.form["password"] + SALT	#Salted password
         hashedpwd = hashlib.sha256(plainpwd.encode("utf-8")).hexdigest()
-        mfa = int(escape(request.form["mfa"]))			#Phone number for 2FA
+        mfa = int(re.sub('[^0-9]','',request.form["mfa"]))			#Phone number for 2FA
         user = db.session.query(User).filter_by(username=username).first()
 
 	#Check if user entered correct info before logging them in
@@ -66,10 +67,10 @@ def login():
 @app.route("/register", methods=["POST", "GET"])
 def register():
     if request.form:
-        username = escape(request.form["username"])
-        plainpwd = escape(request.form["password"]) + SALT	#Insert salted password hash into db
+        username = request.form["username"]
+        plainpwd = request.form["password"] + SALT	#Insert salted password hash into db
         hashedpwd = hashlib.sha256(plainpwd.encode("utf-8")).hexdigest()
-        mfa = int(escape(request.form["mfa"]))
+        mfa = int(re.sub('[^0-9]','',request.form["mfa"]))
         try:						#Record registration time
             user = User(username=username, password=hashedpwd, mfa=mfa)
             log = Loginlog(username=username, query_type="register")
@@ -95,7 +96,7 @@ def logout():
 @login_required
 def spell_check():
     if request.form:
-        original_txt = escape(request.form["unchecked"])
+        original_txt = request.form["unchecked"]
         misspelled = ''
         #Create tmp file for spell_check input
         f = open('textout.txt', 'w+')
@@ -133,8 +134,8 @@ def query(querynum):
 def history():
     if session["username"] == "admin":
         if request.form:
-            query_ct = db.session.query(Spellcheck).filter_by(username=escape(request.form["username"])).count()
-            queries = db.session.query(Spellcheck).filter_by(username=escape(request.form["username"])).all()
+            query_ct = db.session.query(Spellcheck).filter_by(username=request.form["username"]).count()
+            queries = db.session.query(Spellcheck).filter_by(username=request.form["username"]).all()
             return render_template("history.html", queries=queries, count=query_ct, user=session["username"])
         return render_template("history.html", user=session["username"])
     else:
@@ -150,7 +151,7 @@ def login_history():
     username = session["username"]
     if username == "admin":
         if request.form:
-            logs = db.session.query(Loginlog).filter_by(username=escape(request.form["uname"])).all()
+            logs = db.session.query(Loginlog).filter_by(username=request.form["uname"]).all()
 
             return render_template("login_history.html", log=logs, user=username)
         
