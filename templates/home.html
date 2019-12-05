@@ -3,9 +3,14 @@
         <title>Spellchecker</title>
     </head>
     <body>
-        <h1>Hello, {{ username }}</h1>
+        <h1>Home</h1>
         <div>
             <ul>
+                <li><a href="/spell_check">Spell Check</a></li>
+                <li><a href="/history">History</a></li>
+                {% if user == "admin" %}
+                    <li><a href="/login_history">Log History</a></li>
+                {% endif %}
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </div>

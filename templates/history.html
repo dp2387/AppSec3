@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Spellcheck</title>
+    </head>
+
+    <body>
+        <h1>Query History</h1>
+        {% if user == "admin" %}
+        <form action="/history" method="post">
+            <input type="text" id="userquery" name="username">
+            <input type="submit" value="Search">
+        </form>
+        {% endif %}
+        {% if queries %}
+            <p id="numqueries">Queries: {{ count }}</p>
+            {% for query in queries %}
+                <a id="query{{ query.query_id }}" href={{ url_for("query", querynum=query.query_id) }}>{{ query.query_id }}</a>
+            {% endfor %}
+        {% endif %}
+    </body>
+</html>

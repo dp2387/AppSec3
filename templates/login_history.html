@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>Spellchecker</title>
+    </head>
+    <body>
+        {% if user == "admin" %}
+            <h1>Login History</h1>
+            <form action="login_history" method="post">
+                <input type="text" id="userid" name="uname">
+                <input type="submit" value="Search">
+            </form>
+            {% if log %}
+                {% for event in log %}
+                    {{ event.query_id }} | {{ event.username }} | {{ event.time }} | {{ event.query_type }}<br>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            <h2>NOT ALLOWED</h2>
+        {% endif %}
+    </body>
+</html>

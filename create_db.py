@@ -19,20 +19,22 @@ class User(db.Model):
 class Spellcheck(db.Model):
     __tablename__ = 'spellcheck'
 
-    username = db.Column(db.String(32),db.ForeignKey(User.username), primary_key=True)
-    original_txt = db.Column(db.String(1000), primary_key=True)
-    checked_txt = db.Column(db.String(1000), primary_key=True)
+    query_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    username = db.Column(db.String(32),db.ForeignKey(User.username))
+    time = db.Column(db.DateTime, default=db.func.now())
+    query_txt = db.Column(db.String(1000))
+    query_result = db.Column(db.String(1000))
 
     user = db.relationship(User)
 
-class Log(db.Model):
-    __tablename__ = 'log'
+
+class Loginlog(db.Model):
+    __tablename__ = 'loginlog'
 
     query_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(32),db.ForeignKey(User.username))
-    query_type = db.Column(db.String(32))
-    query_str = db.Column(db.String(1000))
     time = db.Column(db.DateTime, default=db.func.now())
+    query_type = db.Column(db.String(16))
 
     user = db.relationship(User)
 

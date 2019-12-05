@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>Spellchecker</title>
+    </head>
+    <body>
+        {% if user == query.username or user == "admin" %}
+            <p id="queryid">Query ID: {{ query.query_id }}</p>
+            <p id="username">Query Username: {{ query.username }}</p>
+            <p id="querytext">Query Text: {{ query.query_txt }}</p>
+            <p id="queryresults">Query Result: {{ query.query_result }}</p>
+        {% else %}
+            <h1>NOT ALLOWED</h1>
+        {% endif %}
+    </body>
+</html>

@@ -8,9 +8,8 @@
             <textarea id="inputtext" name="unchecked" rows="5" cols="50" maxlength="1000" required></textarea>
             <input type="submit" value="Submit">
         </form>
-        {% if message %}
-            {{ message }}
-        {% endif %}
-        <a href="/logout">Logout</a>
+        <textarea id="textout" readonly rows="5" cols="50"> {{ original }} </textarea>
+        <textarea id="misspelled" readonly rows="5" cols="50"> {{ misspelled }} </textarea>
+        <br><a href="/">Go back</a>
     </body>
 </html>
