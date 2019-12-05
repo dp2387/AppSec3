@@ -1,3 +1,6 @@
+#Daniel Palacios - dp2387
+#CS9163 Assignment 3 - Fall 2019
+
 import hashlib
 import os
 import subprocess
@@ -38,11 +41,12 @@ def home():
 def login():
     if request.form:
         username = request.form["username"]
-        plainpwd = request.form["password"] + SALT
+        plainpwd = request.form["password"] + SALT	#Salted password
         hashedpwd = hashlib.sha256(plainpwd.encode("utf-8")).hexdigest()
-        mfa = int(request.form["mfa"])
+        mfa = int(request.form["mfa"])			#Phone number for 2FA
         user = db.session.query(User).filter_by(username=username).first()
 
+	#Check if user entered correct info before logging them in
         if not user:
             result = "Incorrect username."
         elif user.password != hashedpwd:
@@ -51,7 +55,7 @@ def login():
             result = "Two-factor authentication failure."
         elif user.password == hashedpwd and user.mfa == mfa:
             log = Loginlog(username=username, query_type="login")
-            db.session.add(log)
+            db.session.add(log)				#Record login time
             db.session.commit()
             session["username"] = username
             result = "login success."
@@ -63,23 +67,24 @@ def login():
 def register():
     if request.form:
         username = request.form["username"]
-        plainpwd = request.form["password"] + SALT
+        plainpwd = request.form["password"] + SALT	#Insert salted password hash into db
         hashedpwd = hashlib.sha256(plainpwd.encode("utf-8")).hexdigest()
         mfa = int(request.form["mfa"])
-        try:
+        try:						#Record registration time
             user = User(username=username, password=hashedpwd, mfa=mfa)
             log = Loginlog(username=username, query_type="register")
             db.session.add(user)
             db.session.add(log)
             db.session.commit()
             result = "Registration success."
-        except exc.IntegrityError:
+        except exc.IntegrityError:			#Catch error if username exists in db
             result = "Registration failure. Username is already taken."
         return render_template('register.html', result=result)    
     return render_template('register.html')
 
 @app.route("/logout", methods=["GET"])
 def logout():
+    #Record logout time
     log = Loginlog(username=session["username"], query_type="logout")
     db.session.add(log)
     db.session.commit()
@@ -92,7 +97,7 @@ def spell_check():
     if request.form:
         original_txt = request.form["unchecked"]
         misspelled = ''
-
+        #Create tmp file for spell_check input
         f = open('textout.txt', 'w+')
         f.write(original_txt)
         f.close()
@@ -103,9 +108,9 @@ def spell_check():
         for word in checked_txt:
             misspelled += word + ', '
         misspelled = misspelled[:-2]
-        os.remove('textout.txt')
+        os.remove('textout.txt')	#Delete tmp file after spell_check run
 
-        try:
+        try:				#Add query to db
             spellcheck = Spellcheck(username=session["username"], query_txt=original_txt, query_result=misspelled)
             db.session.add(spellcheck)
             db.session.commit()
@@ -115,13 +120,14 @@ def spell_check():
         return render_template('spell_check.html', misspelled=misspelled, original=original_txt)
     return render_template('spell_check.html')
 
-
+#Show selected query info
 @app.route("/history/query<querynum>", methods=["POST", "GET"])
 @login_required
 def query(querynum):
     query = db.session.query(Spellcheck).filter_by(query_id=querynum).first()
     return render_template("query.html", query=query, user=session["username"])
 
+#Find query of current user, or if admin, of selected user
 @app.route("/history", methods=["POST", "GET"])
 @login_required
 def history():
@@ -135,8 +141,9 @@ def history():
         query_ct = db.session.query(Spellcheck).filter_by(username=session["username"]).count()
         queries = db.session.query(Spellcheck).filter_by(username=session["username"]).all()
         return render_template("history.html", queries=queries, count=query_ct, user=session["username"])
-    #return render_template("history.html")
 
+
+#Allow admin to check login history
 @app.route("/login_history", methods=["POST", "GET"])
 @login_required
 def login_history():
