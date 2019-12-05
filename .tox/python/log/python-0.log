@@ -1,9 +1,0 @@
-action: python, msg: getenv
-cwd: /root/Documents/AppSec3/.tox
-cmd: /usr/bin/python3 -m virtualenv --no-download --python /usr/bin/python3 python
-Already using interpreter /usr/bin/python3
-Using base prefix '/usr'
-New python executable in /root/Documents/AppSec3/.tox/python/bin/python3
-Also creating executable in /root/Documents/AppSec3/.tox/python/bin/python
-Installing setuptools, pip, wheel...
-done.

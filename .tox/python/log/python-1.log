@@ -1,3 +1,0 @@
-action: python, msg: envreport
-cwd: /root/Documents/AppSec3
-cmd: /root/Documents/AppSec3/.tox/python/bin/python -m pip freeze
